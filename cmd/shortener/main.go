@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 )
 
@@ -31,8 +32,8 @@ func PostFunc(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-type", "text/plain")
 	w.WriteHeader(http.StatusCreated)
-	w.Write([]byte(resp.ShortURL))
-	//fmt.Printf("%s\n", resp.ShortURL)
+
+	fmt.Printf("%s\n", resp.ShortURL)
 }
 
 func ShortenURL(url string) string {
@@ -63,11 +64,11 @@ func GetOrigianlURL(id string) string {
 }
 
 func main() {
-	mux := http.NewServeMux()
-	mux.HandleFunc(`/`, PostFunc)
-	mux.HandleFunc(`/{id}`, GetFunc)
 
-	err := http.ListenAndServe(`:8080`, mux)
+	http.HandleFunc("/", PostFunc)
+	http.HandleFunc("/{id}", GetFunc)
+
+	err := http.ListenAndServe("localhost:8080", nil)
 	if err != nil {
 		panic(err)
 	}
