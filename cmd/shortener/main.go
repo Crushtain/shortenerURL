@@ -37,15 +37,15 @@ func PostFunc(w http.ResponseWriter, r *http.Request) {
 }
 
 func ShortenURL(url string) string {
-	shortUrlID := "TestShortURL_id"
-	URLStore[shortUrlID] = url
-	return shortUrlID
+	shortURLID := "TestShortURL_id"
+	URLStore[shortURLID] = url
+	return shortURLID
 }
 
 func GetFunc(w http.ResponseWriter, r *http.Request) {
 
-	shortUrlId := r.URL.Path[len("/"):]
-	originalURL := GetOrigianlURL(shortUrlId)
+	shortURLId := r.URL.Path[len("/"):]
+	originalURL := GetOrigianlURL(shortURLId)
 	if originalURL == "" {
 		w.WriteHeader(http.StatusBadRequest)
 		return
