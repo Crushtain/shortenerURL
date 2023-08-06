@@ -29,11 +29,11 @@ func PostFunc(w http.ResponseWriter, r *http.Request) {
 	resp := ShortURL{
 		ShortURL: shortURL,
 	}
-
+	out, _ := json.Marshal(&resp)
 	w.Header().Set("Content-type", "text/plain")
 	w.WriteHeader(http.StatusCreated)
+	fmt.Println(string(out))
 
-	fmt.Printf("%s\n", resp.ShortURL)
 }
 
 func ShortenURL(url string) string {
@@ -50,7 +50,8 @@ func GetFunc(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	w.Header().Set("Location", originalURL)
+	out, _ := json.Marshal(&originalURL)
+	w.Header().Set("Location", string(out))
 	w.WriteHeader(http.StatusTemporaryRedirect)
 
 }
