@@ -3,6 +3,8 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/itchyny/base58-go"
+	"io"
 	"net/http"
 )
 
@@ -17,23 +19,24 @@ var URLStore map[string]string
 
 func PostFunc(w http.ResponseWriter, r *http.Request) {
 
-	var original OriginalURL
-	err := json.NewDecoder(r.Body).Decode(&original)
+	body, err := io.ReadAll(r.Body)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
-	shortURL := ShortenURL(original.URL)
-
 	//resp := ShortURL{
 	//	ShortURL: shortURL,
 	//}
 	//out, _ := json.Marshal(&resp)
-
+	encoding := base58.FlickrEncoding
+	encode, err := encoding.Encode(body)
+	if err != nil {
+		panic(err)
+	}
 	w.Header().Set("Content-type", "text/plain")
 	w.WriteHeader(http.StatusCreated)
-	fmt.Println(string(shortURL))
+	fmt.Println(string(encode))
 
 }
 
