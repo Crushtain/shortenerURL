@@ -2,7 +2,7 @@ package handlers
 
 import (
 	"bytes"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -38,7 +38,7 @@ func TestShortenHandler(t *testing.T) {
 	}
 
 	// Проверяем тело ответа
-	responseBody, err := ioutil.ReadAll(recorder.Body)
+	responseBody, err := io.ReadAll(recorder.Body)
 	if err != nil {
 		t.Fatal(err)
 	}
