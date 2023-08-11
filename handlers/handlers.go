@@ -33,10 +33,10 @@ func (h *URLHandler) Shorten(w http.ResponseWriter, r *http.Request) {
 	}
 	short := base62.Encode(body)        //кодирую
 	h.Save(string(short), string(body)) //сохраняю
-
+	out := "http://localhost:8080/" + string(short)
 	w.Header().Set("Content-type", "text/plain")
 	w.WriteHeader(http.StatusCreated)
-	fmt.Println(string(short))
+	fmt.Println(string(out))
 
 }
 
