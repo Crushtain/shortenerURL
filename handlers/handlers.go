@@ -31,12 +31,13 @@ func (h *URLHandler) Shorten(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
+
 	short := base62.Encode(body)        //кодирую
 	h.Save(string(short), string(body)) //сохраняю
 	out := "http://localhost:8080/" + string(short)
 	w.Header().Set("Content-type", "text/plain")
 	w.WriteHeader(http.StatusCreated)
-	fmt.Println(string(out))
+	fmt.Fprint(w, string(out))
 
 }
 
@@ -44,7 +45,7 @@ func (h *URLHandler) Original(w http.ResponseWriter, r *http.Request) {
 	urlPath := r.URL.Path
 	lastSlashIndex := strings.LastIndex(urlPath, "/")
 	short := urlPath[lastSlashIndex+1:]
-	//short := strings.TrimPrefix(r.URL.Path, "/")
+
 	if short == "" {
 		w.WriteHeader(http.StatusBadRequest)
 		return
