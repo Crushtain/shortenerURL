@@ -35,7 +35,7 @@ func TestFoo(t *testing.T) {
 	// Отправляем POST запрос на "/"
 	resp, err := http.Post(ts.URL+"/", "text/plain", nil)
 	if err != nil {
-
+		t.Fatal(err)
 	}
 	defer resp.Body.Close()
 

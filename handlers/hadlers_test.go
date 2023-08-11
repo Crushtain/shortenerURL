@@ -12,7 +12,7 @@ import (
 func TestShortenHandler(t *testing.T) {
 	// Создаем новый тестовый запрос
 	body := []byte("example-url")
-	req, err := http.NewRequest("POST", "/shorten", bytes.NewBuffer(body))
+	req, err := http.NewRequest("POST", "/", bytes.NewBuffer(body))
 	if err != nil {
 		t.Fatal(err)
 	}
