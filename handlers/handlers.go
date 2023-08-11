@@ -6,25 +6,26 @@ import (
 	"github.com/jxskiss/base62"
 	"io"
 	"net/http"
+	"strings"
 	"sync"
 )
 
-type UrlHandler struct {
+type URLHandler struct {
 	mu      sync.RWMutex
 	storage *storage.InMemory
 }
 
-func NewUrl(store *storage.InMemory) *UrlHandler {
-	return &UrlHandler{storage: store}
+func NewURL(store *storage.InMemory) *URLHandler {
+	return &URLHandler{storage: store}
 }
 
-func (h *UrlHandler) Save(short string, body string) {
+func (h *URLHandler) Save(short string, body string) {
 
 	h.storage.Put(short, body)
 
 }
 
-func (h *UrlHandler) Shorten(w http.ResponseWriter, r *http.Request) {
+func (h *URLHandler) Shorten(w http.ResponseWriter, r *http.Request) {
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
@@ -39,9 +40,9 @@ func (h *UrlHandler) Shorten(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func (h *UrlHandler) Original(w http.ResponseWriter, r *http.Request) {
-	short, err := io.ReadAll(r.Body)
-	if err != nil {
+func (h *URLHandler) Original(w http.ResponseWriter, r *http.Request) {
+	short := strings.TrimPrefix(r.URL.Path, "/")
+	if short == "" {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}

@@ -9,10 +9,11 @@ import (
 
 func main() {
 	memory := storage.NewInMemory()
-	urlHandler := handlers.NewUrl(memory)
+	urlHandler := handlers.NewURL(memory)
+
 	router := chi.NewRouter()
 	router.Post("/", urlHandler.Shorten)
-	//router.Get("/:id", urlHandler.Original)
+	router.Get("/{id}", urlHandler.Original)
 
 	err := http.ListenAndServe("localhost:8080", router)
 	if err != nil {
