@@ -2,6 +2,8 @@ package handlers
 
 import (
 	"bytes"
+	"fmt"
+	"github.com/Crushtain/shortenerURL/storage"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -47,5 +49,76 @@ func TestShortenHandler(t *testing.T) {
 	if expectedResponse != actualResponse {
 		t.Errorf("Ожидался ответ '%s', получен '%s'",
 			expectedResponse, actualResponse)
+	}
+}
+
+type mockStorage struct {
+	data     map[string]string
+	InMemory *storage.InMemory
+}
+
+func (m *mockStorage) Put(short, body string) {
+	m.data[short] = body
+}
+
+func (m *mockStorage) Get(short string) string {
+	return m.data[short]
+}
+
+func TestOriginalHandler(t *testing.T) {
+	// Создаем экземпляр URLHandler с использованием mockStorage
+	storage := &mockStorage{
+		data: make(map[string]string),
+	}
+	urlHandler := &URLHandler{
+		storage: storage.InMemory,
+	}
+
+	// Создаем тестовый HTTP-запрос с корректным шорткодом
+	req, err := http.NewRequest("GET", "/abc123", nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	rr := httptest.NewRecorder()
+
+	// Вызываем обработчик Original
+	handler := http.HandlerFunc(urlHandler.Original)
+	handler.ServeHTTP(rr, req)
+
+	// Проверяем статус-код
+	if status := rr.Code; status != http.StatusTemporaryRedirect {
+		t.Errorf("Expected status code %v but got %v", http.StatusTemporaryRedirect, status)
+	}
+
+	// Проверяем заголовок Location
+	expectedLocation := "value"
+	location := rr.Header().Get("Location")
+	if location != expectedLocation {
+		t.Errorf("Expected Location header %q but got %q", expectedLocation, location)
+	}
+
+	// Проверяем вывод в консоль
+	expectedOutput := "value"
+	actualOutput := fmt.Sprint(rr.Body)
+	if actualOutput != expectedOutput {
+		t.Errorf("Expected output %q but got %q", expectedOutput, actualOutput)
+	}
+
+	// Создаем тестовый HTTP-запрос с некорректным шорткодом
+	req, err = http.NewRequest("GET", "/", nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	rr = httptest.NewRecorder()
+
+	// Вызываем обработчик Original
+	handler = http.HandlerFunc(urlHandler.Original)
+	handler.ServeHTTP(rr, req)
+
+	// Проверяем статус-код
+	if status := rr.Code; status != http.StatusBadRequest {
+		t.Errorf("Expected status code %v but got %v", http.StatusBadRequest, status)
 	}
 }
