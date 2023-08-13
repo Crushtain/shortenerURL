@@ -36,12 +36,12 @@ func (h *URLHandler) Shorten(w http.ResponseWriter, r *http.Request) {
 
 	short := base62.Encode(body)        //кодирую
 	h.Save(string(short), string(body)) //сохраняю
-	out := "http://localhost:8080/" + string(short)
+	//out := "http://localhost:8080/" + string(short)
 	//flag.StringVar("b", out, "fgwewe")
 	response := fmt.Sprintf(h.url.ResultURL+"/%s", short)
 	w.Header().Set("Content-type", "text/plain")
 	w.WriteHeader(http.StatusCreated)
-	fmt.Fprint(w, string(out))
+	//fmt.Fprint(w, string(out))
 	_, err = io.WriteString(w, response)
 	if err != nil {
 		return
