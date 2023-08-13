@@ -28,11 +28,7 @@ func (h *URLHandler) Save(short string, body string) {
 }
 
 func (h *URLHandler) Shorten(w http.ResponseWriter, r *http.Request) {
-	address := r.Host
-	if strings.Contains(address, ":") {
-		// Удаление порта из адреса
-		address = strings.Split(address, ":")[0]
-	}
+
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
