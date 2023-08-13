@@ -20,7 +20,7 @@ func main() {
 	router.Post("/", urlHandler.Shorten)
 	router.Get("/{id}", urlHandler.Original)
 
-	err := http.ListenAndServe("localhost:8080", router)
+	err := http.ListenAndServe(conf.Host, router)
 	if err != nil {
 		panic(err)
 	}
