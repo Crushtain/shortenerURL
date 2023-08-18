@@ -43,7 +43,7 @@ func (c *Config) Shorten(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-type", "text/plain")
 	w.WriteHeader(http.StatusCreated)
 
-	_, err = io.WriteString(w, response)
+	io.WriteString(w, response)
 
 }
 
