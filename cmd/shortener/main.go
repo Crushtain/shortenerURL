@@ -2,11 +2,12 @@ package main
 
 import (
 	"flag"
-	"github.com/Crushtain/shortenerURL/config"
-	"github.com/Crushtain/shortenerURL/handlers"
-	"github.com/Crushtain/shortenerURL/storage"
-	"github.com/go-chi/chi/v5"
 	"net/http"
+
+	"github.com/Crushtain/shortenerURL/internal/config"
+	"github.com/Crushtain/shortenerURL/internal/handlers"
+	"github.com/Crushtain/shortenerURL/internal/storage"
+	"github.com/go-chi/chi/v5"
 )
 
 func main() {
